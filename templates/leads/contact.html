@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Contact Us - Car Dealership{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="bg-gray-900 text-white py-16">
+    <div class="container mx-auto px-6">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Contact Us</h1>
+            <p class="text-xl opacity-90">We're here to help you find your perfect car</p>
+        </div>
+    </div>
+</section>
+
+<section class="py-12">
+    <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Contact Form -->
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Send Us a Message</h2>
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <form method="post" class="space-y-6">
+                        {% csrf_token %}
+                        {% crispy form %}
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Contact Information -->
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Get in Touch</h2>
+                
+                <!-- Contact Cards -->
+                <div class="space-y-6">
+                    <!-- Address -->
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-map-marker-alt text-blue-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">Visit Our Showroom</h3>
+                                <p class="text-gray-600">123 Auto Street<br>Car City, CC 12345</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Phone -->
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-phone text-green-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">Call Us</h3>
+                                <p class="text-gray-600">(555) 123-4567</p>
+                                <p class="text-sm text-gray-500">Mon-Sat: 9AM-7PM, Sun: 10AM-6PM</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-envelope text-purple-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">Email Us</h3>
+                                <p class="text-gray-600">info@autodealer.com</p>
+                                <p class="text-sm text-gray-500">We typically respond within 24 hours</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- WhatsApp -->
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fab fa-whatsapp text-green-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">WhatsApp</h3>
+                                <p class="text-gray-600">Quick messages and inquiries</p>
+                                <a href="https://wa.me/15551234567" target="_blank" class="text-green-600 hover:text-green-800 text-sm font-medium">
+                                    Start chat <i class="fas fa-external-link-alt ml-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Business Hours -->
+                <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mt-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                        <i class="fas fa-clock mr-2 text-blue-600"></i>
+                        Business Hours
+                    </h3>
+                    <div class="space-y-2 text-gray-700">
+                        <div class="flex justify-between">
+                            <span>Monday - Friday:</span>
+                            <span class="font-medium">9:00 AM - 7:00 PM</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Saturday:</span>
+                            <span class="font-medium">9:00 AM - 6:00 PM</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Sunday:</span>
+                            <span class="font-medium">10:00 AM - 5:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Map Section -->
+        <div class="mt-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Find Us</h2>
+            <div class="bg-gray-200 rounded-2xl h-96 flex items-center justify-center">
+                <div class="text-center text-gray-600">
+                    <i class="fas fa-map text-4xl mb-4"></i>
+                    <p>Interactive map would be embedded here</p>
+                    <p class="text-sm">123 Auto Street, Car City, CC 12345</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

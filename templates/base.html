@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Car Dealership{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .car-card {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        
+        .car-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background-color: #667eea;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .hero-bg {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .search-box {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <a href="{% url 'home' %}" class="text-2xl font-bold gradient-bg bg-clip-text text-transparent">
+                        <i class="fas fa-car text-blue-600"></i> AutoDealer
+                    </a>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="{% url 'home' %}" class="nav-link text-gray-700 hover:text-blue-600 {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                        Home
+                    </a>
+                    <a href="{% url 'cars:list' %}" class="nav-link text-gray-700 hover:text-blue-600 {% if request.resolver_match.namespace == 'cars' %}active{% endif %}">
+                        Cars
+                    </a>
+                    <a href="{% url 'leads:contact' %}" class="nav-link text-gray-700 hover:text-blue-600 {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">
+                        Contact
+                    </a>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-700 hover:text-blue-600 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="hidden md:hidden pb-4">
+                <div class="flex flex-col space-y-2">
+                    <a href="{% url 'home' %}" class="text-gray-700 hover:text-blue-600 py-2">Home</a>
+                    <a href="{% url 'cars:list' %}" class="text-gray-700 hover:text-blue-600 py-2">Cars</a>
+                    <a href="{% url 'leads:contact' %}" class="text-gray-700 hover:text-blue-600 py-2">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="container mx-auto px-6 mt-4">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} bg-{{ message.tags == 'success' and 'green' or message.tags == 'error' and 'red' or 'blue' }}-100 border border-{{ message.tags == 'success' and 'green' or message.tags == 'error' and 'red' or 'blue' }}-400 text-{{ message.tags == 'success' and 'green' or message.tags == 'error' and 'red' or 'blue' }}-700 px-4 py-3 rounded mb-4">
+                    {{ message }}
+                    <button class="float-right ml-4 text-xl leading-none" onclick="this.parentElement.style.display='none'">×</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-car text-blue-400 text-2xl"></i>
+                        <span class="text-xl font-bold">AutoDealer</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">Your trusted partner in finding the perfect car. Quality vehicles, exceptional service.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'home' %}" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="{% url 'cars:list' %}" class="text-gray-400 hover:text-white transition-colors">Browse Cars</a></li>
+                        <li><a href="{% url 'leads:contact' %}" class="text-gray-400 hover:text-white transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Financing</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Services -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Services</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Buy a Car</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Trade-in</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Test Drive</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Service & Parts</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Info -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact Info</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><i class="fas fa-map-marker-alt mr-2"></i> 123 Auto Street, Car City, CC 12345</li>
+                        <li><i class="fas fa-phone mr-2"></i> (555) 123-4567</li>
+                        <li><i class="fas fa-envelope mr-2"></i> info@autodealer.com</li>
+                        <li><i class="fas fa-clock mr-2"></i> Mon-Sat: 9AM-7PM, Sun: 10AM-6PM</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 AutoDealer. All rights reserved. | Powered by Django</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+        
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
+            });
+        }, 5000);
+    </script>
+    
+    {% block extra_js %}
+    {% endblock %}
+</body>
+</html>

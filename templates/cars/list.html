@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Cars for Sale - Car Dealership{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="bg-gray-900 text-white py-16">
+    <div class="container mx-auto px-6">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Our Inventory</h1>
+            <p class="text-xl opacity-90">{{ cars|length }} car{{ cars|length|pluralize }} available</p>
+        </div>
+    </div>
+</section>
+
+<!-- Filters -->
+<section class="bg-white py-8 border-b">
+    <div class="container mx-auto px-6">
+        <form method="GET" class="grid grid-cols-1 md:grid-cols-6 gap-4" id="filter-form">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Make</label>
+                <select name="make" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="">All Makes</option>
+                    {% for make in makes %}
+                        <option value="{{ make }}" {% if current_filters.make == make %}selected{% endif %}>{{ make }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Min Price</label>
+                <input type="number" name="min_price" value="{{ current_filters.min_price }}" placeholder="$0" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Max Price</label>
+                <input type="number" name="max_price" value="{{ current_filters.max_price }}" placeholder="Any" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Fuel Type</label>
+                <select name="fuel_type" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="">All Types</option>
+                    {% for value, label in fuel_types %}
+                        <option value="{{ value }}" {% if current_filters.fuel_type == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                <select name="sort_by" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="-created_at" {% if current_filters.sort_by == '-created_at' %}selected{% endif %}>Newest First</option>
+                    <option value="price" {% if current_filters.sort_by == 'price' %}selected{% endif %}>Price: Low to High</option>
+                    <option value="-price" {% if current_filters.sort_by == '-price' %}selected{% endif %}>Price: High to Low</option>
+                    <option value="year" {% if current_filters.sort_by == 'year' %}selected{% endif %}>Year: Old to New</option>
+                    <option value="-year" {% if current_filters.sort_by == '-year' %}selected{% endif %}>Year: New to Old</option>
+                    <option value="mileage" {% if current_filters.sort_by == 'mileage' %}selected{% endif %}>Mileage: Low to High</option>
+                </select>
+            </div>
+            
+            <div class="flex items-end space-x-2">
+                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex-1">
+                    <i class="fas fa-filter mr-2"></i>Filter
+                </button>
+                <a href="{% url 'cars:list' %}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors">
+                    <i class="fas fa-times"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Car Grid -->
+<section class="py-12">
+    <div class="container mx-auto px-6">
+        {% if cars %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                {% for car in cars %}
+                <div class="car-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="relative">
+                        {% if car.primary_image %}
+                            <img src="{{ car.primary_image.image.url }}" alt="{{ car }}" class="w-full h-64 object-cover">
+                        {% else %}
+                            <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
+                                <i class="fas fa-car text-gray-400 text-4xl"></i>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="absolute top-4 left-4 space-y-2">
+                            {% if car.is_featured %}
+                                <span class="block bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                                    Featured
+                                </span>
+                            {% endif %}
+                            {% if car.condition == 'New' %}
+                                <span class="block bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                                    New
+                                </span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="absolute top-4 right-4">
+                            <button class="bg-white bg-opacity-90 text-gray-700 p-2 rounded-full hover:bg-opacity-100 transition-all" title="Save to favorites">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">{{ car.year }} {{ car.make }} {{ car.model }}</h3>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="text-2xl font-bold text-blue-600">{{ car.formatted_price }}</div>
+                            <div class="text-gray-600">{{ car.mileage|intcomma }} miles</div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-6 text-sm text-gray-600">
+                            <div><i class="fas fa-gas-pump mr-2 text-blue-500"></i>{{ car.get_fuel_type_display }}</div>
+                            <div><i class="fas fa-cogs mr-2 text-blue-500"></i>{{ car.get_transmission_display }}</div>
+                            <div><i class="fas fa-car mr-2 text-blue-500"></i>{{ car.get_body_type_display }}</div>
+                            <div><i class="fas fa-palette mr-2 text-blue-500"></i>{{ car.color|default:"Not specified" }}</div>
+                        </div>
+                        
+                        <div class="flex space-x-2">
+                            <a href="{{ car.get_absolute_url }}" class="flex-1 bg-blue-600 text-white text-center py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                                View Details
+                            </a>
+                            <a href="{% url 'leads:create_lead_for_car' car.id %}" class="bg-gray-200 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-300 transition-colors" title="Inquire about this car">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                            <a href="https://wa.me/15551234567?text=Hi, I'm interested in the {{ car.year }} {{ car.make }} {{ car.model }} priced at {{ car.formatted_price }}" target="_blank" class="bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 transition-colors" title="WhatsApp inquiry">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if is_paginated %}
+                <div class="flex justify-center">
+                    <nav class="flex items-center space-x-2">
+                        {% if page_obj.has_previous %}
+                            <a href="?{{ current_filters.urlencode }}&page=1" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                                <i class="fas fa-angle-double-left"></i>
+                            </a>
+                            <a href="?{{ current_filters.urlencode }}&page={{ page_obj.previous_page_number }}" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                                <i class="fas fa-angle-left"></i>
+                            </a>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <span class="px-4 py-2 bg-blue-600 text-white rounded-lg">{{ num }}</span>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <a href="?{{ current_filters.urlencode }}&page={{ num }}" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                            <a href="?{{ current_filters.urlencode }}&page={{ page_obj.next_page_number }}" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                                <i class="fas fa-angle-right"></i>
+                            </a>
+                            <a href="?{{ current_filters.urlencode }}&page={{ page_obj.paginator.num_pages }}" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                                <i class="fas fa-angle-double-right"></i>
+                            </a>
+                        {% endif %}
+                    </nav>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="text-center py-16">
+                <i class="fas fa-car text-gray-300 text-6xl mb-4"></i>
+                <h3 class="text-2xl font-bold text-gray-700 mb-2">No cars found</h3>
+                <p class="text-gray-600 mb-6">Try adjusting your search filters or check back later for new inventory.</p>
+                <a href="{% url 'cars:list' %}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                    View All Cars
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-submit form when filters change
+    document.querySelectorAll('#filter-form select').forEach(select => {
+        select.addEventListener('change', function() {
+            document.getElementById('filter-form').submit();
+        });
+    });
+</script>
+{% endblock %}

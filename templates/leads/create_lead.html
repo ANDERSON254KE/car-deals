@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Contact Us{% if car %} - {{ car }}{% endif %} - Car Dealership{% endblock %}
+
+{% block content %}
+<section class="py-12">
+    <div class="container mx-auto px-6">
+        <div class="max-w-2xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                {% if car %}
+                    <h1 class="text-3xl font-bold text-gray-900 mb-4">Inquire About This Car</h1>
+                    <div class="bg-gray-50 p-6 rounded-xl mb-8">
+                        <div class="flex items-center space-x-4">
+                            {% if car.primary_image %}
+                                <img src="{{ car.primary_image.image.url }}" alt="{{ car }}" class="w-20 h-16 object-cover rounded-lg">
+                            {% else %}
+                                <div class="w-20 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-car text-gray-400"></i>
+                                </div>
+                            {% endif %}
+                            <div>
+                                <h2 class="text-xl font-semibold text-gray-900">{{ car.year }} {{ car.make }} {{ car.model }}</h2>
+                                <div class="text-lg font-bold text-blue-600">{{ car.formatted_price }}</div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <h1 class="text-3xl font-bold text-gray-900 mb-4">Send Us an Inquiry</h1>
+                    <p class="text-gray-600">Have a question or need more information? We're here to help!</p>
+                {% endif %}
+            </div>
+            
+            <!-- Form -->
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    {% crispy form %}
+                </form>
+            </div>
+            
+            <!-- Contact Information -->
+            <div class="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-2xl">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Other Ways to Reach Us</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    <div>
+                        <i class="fas fa-phone text-blue-500 text-2xl mb-2"></i>
+                        <div class="font-medium">Call Us</div>
+                        <div class="text-gray-600">(555) 123-4567</div>
+                    </div>
+                    <div>
+                        <i class="fab fa-whatsapp text-green-500 text-2xl mb-2"></i>
+                        <div class="font-medium">WhatsApp</div>
+                        <div class="text-gray-600">Quick Response</div>
+                    </div>
+                    <div>
+                        <i class="fas fa-map-marker-alt text-red-500 text-2xl mb-2"></i>
+                        <div class="font-medium">Visit Us</div>
+                        <div class="text-gray-600">123 Auto Street</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Book Test Drive - {{ car }} - Car Dealership{% endblock %}
+
+{% block content %}
+<section class="py-12">
+    <div class="container mx-auto px-6">
+        <div class="max-w-2xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">Book a Test Drive</h1>
+                <p class="text-gray-600">Experience this car firsthand with a test drive</p>
+                
+                <div class="bg-gray-50 p-6 rounded-xl mt-8">
+                    <div class="flex items-center space-x-4">
+                        {% if car.primary_image %}
+                            <img src="{{ car.primary_image.image.url }}" alt="{{ car }}" class="w-24 h-20 object-cover rounded-lg">
+                        {% else %}
+                            <div class="w-24 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-car text-gray-400 text-xl"></i>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h2 class="text-xl font-semibold text-gray-900">{{ car.year }} {{ car.make }} {{ car.model }}</h2>
+                            <div class="text-lg font-bold text-blue-600">{{ car.formatted_price }}</div>
+                            <div class="text-gray-600">{{ car.mileage|floatformat:0 }}k miles • {{ car.get_fuel_type_display }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Form -->
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    {% crispy form %}
+                </form>
+            </div>
+            
+            <!-- Test Drive Information -->
+            <div class="mt-8 bg-blue-50 p-6 rounded-2xl">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                    <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                    Test Drive Information
+                </h3>
+                <div class="space-y-3 text-gray-700">
+                    <div class="flex items-start">
+                        <i class="fas fa-id-card text-blue-500 mr-3 mt-1"></i>
+                        <div>
+                            <div class="font-medium">Valid Driver's License Required</div>
+                            <div class="text-sm text-gray-600">Please bring a valid driver's license and be prepared to provide insurance information</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-clock text-blue-500 mr-3 mt-1"></i>
+                        <div>
+                            <div class="font-medium">Arrive 15 Minutes Early</div>
+                            <div class="text-sm text-gray-600">This allows time for paperwork and vehicle preparation</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-route text-blue-500 mr-3 mt-1"></i>
+                        <div>
+                            <div class="font-medium">Test Drive Duration</div>
+                            <div class="text-sm text-gray-600">Typically 15-20 minutes, including city and highway driving</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-phone text-blue-500 mr-3 mt-1"></i>
+                        <div>
+                            <div class="font-medium">Questions?</div>
+                            <div class="text-sm text-gray-600">Call us at (555) 123-4567 if you need to reschedule or have questions</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Back to Car -->
+            <div class="mt-6 text-center">
+                <a href="{{ car.get_absolute_url }}" class="text-blue-600 hover:text-blue-800 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>Back to car details
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

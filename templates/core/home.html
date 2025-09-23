@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Car Dealership{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-bg relative min-h-screen flex items-center">
+    <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto text-center text-white">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6">
+                Find Your Perfect Car
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 opacity-90">
+                Discover quality pre-owned vehicles with exceptional service and competitive prices
+            </p>
+            
+            <!-- Search Box -->
+            <div class="search-box rounded-2xl p-8 max-w-3xl mx-auto">
+                <form method="GET" action="{% url 'cars:search' %}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Make</label>
+                        <select name="make" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Any Make</option>
+                            <option value="Toyota">Toyota</option>
+                            <option value="Honda">Honda</option>
+                            <option value="Ford">Ford</option>
+                            <option value="BMW">BMW</option>
+                            <option value="Mercedes">Mercedes</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Max Price</label>
+                        <select name="max_price" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Any Price</option>
+                            <option value="15000">Under $15,000</option>
+                            <option value="25000">Under $25,000</option>
+                            <option value="35000">Under $35,000</option>
+                            <option value="50000">Under $50,000</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Year</label>
+                        <select name="min_year" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Any Year</option>
+                            <option value="2020">2020+</option>
+                            <option value="2018">2018+</option>
+                            <option value="2015">2015+</option>
+                            <option value="2010">2010+</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex items-end">
+                        <button type="submit" class="w-full btn-primary text-white py-3 px-6 rounded-lg font-medium text-lg">
+                            <i class="fas fa-search mr-2"></i> Search Cars
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
+        <i class="fas fa-chevron-down text-2xl"></i>
+    </div>
+</section>
+
+<!-- Featured Cars Section -->
+{% if featured_cars %}
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Featured Vehicles</h2>
+            <p class="text-xl text-gray-600">Handpicked cars with exceptional value</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for car in featured_cars %}
+            <div class="car-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="relative">
+                    {% if car.primary_image %}
+                        <img src="{{ car.primary_image.image.url }}" alt="{{ car }}" class="w-full h-64 object-cover">
+                    {% else %}
+                        <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
+                            <i class="fas fa-car text-gray-400 text-4xl"></i>
+                        </div>
+                    {% endif %}
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                            Featured
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">{{ car.year }} {{ car.make }} {{ car.model }}</h3>
+                    
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-2xl font-bold text-blue-600">{{ car.formatted_price }}</div>
+                        <div class="text-gray-600">{{ car.mileage|floatformat:0 }}k miles</div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-6 text-sm text-gray-600">
+                        <div><i class="fas fa-gas-pump mr-2 text-blue-500"></i>{{ car.get_fuel_type_display }}</div>
+                        <div><i class="fas fa-cogs mr-2 text-blue-500"></i>{{ car.get_transmission_display }}</div>
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <a href="{{ car.get_absolute_url }}" class="flex-1 bg-blue-600 text-white text-center py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                            View Details
+                        </a>
+                        <a href="{% url 'leads:create_lead_for_car' car.id %}" class="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-12">
+            <a href="{% url 'cars:list' %}" class="btn-primary text-white py-4 px-8 rounded-lg text-lg font-medium inline-block">
+                View All Cars <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Recent Arrivals Section -->
+{% if recent_cars %}
+<section class="py-20 bg-gray-50">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Recent Arrivals</h2>
+            <p class="text-xl text-gray-600">Fresh inventory just added to our lot</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for car in recent_cars %}
+            <div class="car-card bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="relative">
+                    {% if car.primary_image %}
+                        <img src="{{ car.primary_image.image.url }}" alt="{{ car }}" class="w-full h-48 object-cover">
+                    {% else %}
+                        <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                            <i class="fas fa-car text-gray-400 text-3xl"></i>
+                        </div>
+                    {% endif %}
+                    <div class="absolute top-3 right-3">
+                        <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+                            New
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="p-4">
+                    <h3 class="font-bold text-gray-900 mb-1">{{ car.year }} {{ car.make }} {{ car.model }}</h3>
+                    <div class="text-lg font-bold text-blue-600 mb-2">{{ car.formatted_price }}</div>
+                    <div class="text-sm text-gray-600 mb-3">{{ car.mileage|floatformat:0 }}k miles</div>
+                    
+                    <a href="{{ car.get_absolute_url }}" class="block w-full bg-blue-600 text-white text-center py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                        View Details
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Why Choose Us Section -->
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Why Choose Us</h2>
+            <p class="text-xl text-gray-600">Experience the difference with our exceptional service</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center p-8">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-shield-alt text-blue-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-4">Quality Guarantee</h3>
+                <p class="text-gray-600">Every vehicle undergoes thorough inspection and comes with our quality guarantee.</p>
+            </div>
+            
+            <div class="text-center p-8">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-dollar-sign text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-4">Best Prices</h3>
+                <p class="text-gray-600">Competitive pricing with flexible financing options to fit your budget.</p>
+            </div>
+            
+            <div class="text-center p-8">
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-handshake text-purple-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-4">Expert Service</h3>
+                <p class="text-gray-600">Our experienced team provides personalized service throughout your car buying journey.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="gradient-bg py-20">
+    <div class="container mx-auto px-6 text-center">
+        <div class="max-w-3xl mx-auto text-white">
+            <h2 class="text-4xl font-bold mb-6">Ready to Find Your Perfect Car?</h2>
+            <p class="text-xl mb-8 opacity-90">Browse our inventory or contact us for personalized assistance</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'cars:list' %}" class="bg-white text-blue-600 py-4 px-8 rounded-lg text-lg font-medium hover:bg-gray-100 transition-colors">
+                    Browse Inventory
+                </a>
+                <a href="{% url 'leads:contact' %}" class="border-2 border-white text-white py-4 px-8 rounded-lg text-lg font-medium hover:bg-white hover:text-blue-600 transition-colors">
+                    Contact Us Today
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

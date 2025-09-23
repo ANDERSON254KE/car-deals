@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}{{ car.year }} {{ car.make }} {{ car.model }} - Car Dealership{% endblock %}
+
+{% block content %}
+<!-- Car Details -->
+<section class="py-12">
+    <div class="container mx-auto px-6">
+        <!-- Breadcrumb -->
+        <nav class="mb-8">
+            <div class="flex items-center space-x-2 text-sm text-gray-600">
+                <a href="{% url 'home' %}" class="hover:text-blue-600">Home</a>
+                <i class="fas fa-chevron-right text-xs"></i>
+                <a href="{% url 'cars:list' %}" class="hover:text-blue-600">Cars</a>
+                <i class="fas fa-chevron-right text-xs"></i>
+                <span class="text-gray-900">{{ car.year }} {{ car.make }} {{ car.model }}</span>
+            </div>
+        </nav>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Image Gallery -->
+            <div>
+                <!-- Main Image -->
+                <div class="mb-4">
+                    {% if car.images.exists %}
+                        <img id="main-image" src="{{ car.images.first.image.url }}" alt="{{ car }}" class="w-full h-96 object-cover rounded-2xl shadow-lg">
+                    {% else %}
+                        <div class="w-full h-96 bg-gray-200 flex items-center justify-center rounded-2xl shadow-lg">
+                            <i class="fas fa-car text-gray-400 text-6xl"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Thumbnail Images -->
+                {% if car.images.count > 1 %}
+                    <div class="grid grid-cols-4 gap-2">
+                        {% for image in car.images.all %}
+                            <img src="{{ image.image.url }}" alt="{{ car }}" class="thumbnail w-full h-20 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-500 transition-colors {% if forloop.first %}border-blue-500{% endif %}" onclick="changeMainImage('{{ image.image.url }}', this)">
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Car Information -->
+            <div>
+                <div class="mb-6">
+                    {% if car.is_featured %}
+                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium mb-4 inline-block">
+                            <i class="fas fa-star mr-1"></i> Featured
+                        </span>
+                    {% endif %}
+                    
+                    <h1 class="text-4xl font-bold text-gray-900 mb-2">{{ car.year }} {{ car.make }} {{ car.model }}</h1>
+                    <div class="text-3xl font-bold text-blue-600 mb-6">{{ car.formatted_price }}</div>
+                </div>
+                
+                <!-- Key Specs -->
+                <div class="grid grid-cols-2 gap-6 mb-8 p-6 bg-gray-50 rounded-2xl">
+                    <div class="text-center">
+                        <i class="fas fa-tachometer-alt text-blue-500 text-2xl mb-2"></i>
+                        <div class="text-sm text-gray-600">Mileage</div>
+                        <div class="text-lg font-semibold">{{ car.mileage|intcomma }} miles</div>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-gas-pump text-blue-500 text-2xl mb-2"></i>
+                        <div class="text-sm text-gray-600">Fuel Type</div>
+                        <div class="text-lg font-semibold">{{ car.get_fuel_type_display }}</div>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-cogs text-blue-500 text-2xl mb-2"></i>
+                        <div class="text-sm text-gray-600">Transmission</div>
+                        <div class="text-lg font-semibold">{{ car.get_transmission_display }}</div>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-car text-blue-500 text-2xl mb-2"></i>
+                        <div class="text-sm text-gray-600">Body Type</div>
+                        <div class="text-lg font-semibold">{{ car.get_body_type_display }}</div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="space-y-4 mb-8">
+                    <a href="{% url 'leads:book_test_drive' car.id %}" class="block w-full bg-blue-600 text-white text-center py-4 px-6 rounded-xl font-semibold text-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-key mr-2"></i> Book Test Drive
+                    </a>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <a href="{% url 'leads:create_lead_for_car' car.id %}" class="bg-gray-200 text-gray-700 text-center py-3 px-6 rounded-xl font-medium hover:bg-gray-300 transition-colors">
+                            <i class="fas fa-envelope mr-2"></i> Inquire
+                        </a>
+                        <a href="https://wa.me/15551234567?text=Hi, I'm interested in the {{ car.year }} {{ car.make }} {{ car.model }} priced at {{ car.formatted_price }}" target="_blank" class="bg-green-500 text-white text-center py-3 px-6 rounded-xl font-medium hover:bg-green-600 transition-colors">
+                            <i class="fab fa-whatsapp mr-2"></i> WhatsApp
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Contact -->
+                <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-2xl">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Need more information?</h3>
+                    <div class="space-y-2 text-gray-700">
+                        <div><i class="fas fa-phone mr-2 text-blue-500"></i> Call: (555) 123-4567</div>
+                        <div><i class="fas fa-envelope mr-2 text-blue-500"></i> Email: info@autodealer.com</div>
+                        <div><i class="fas fa-map-marker-alt mr-2 text-blue-500"></i> Visit our showroom</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Detailed Information -->
+        <div class="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Description -->
+            <div class="lg:col-span-2">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Description</h2>
+                <div class="prose max-w-none text-gray-700 leading-relaxed mb-8">
+                    {{ car.description|linebreaks }}
+                </div>
+                
+                {% if car.features_list %}
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Key Features</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-8">
+                        {% for feature in car.features_list %}
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                <span class="text-gray-700">{{ feature }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Specifications -->
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Specifications</h2>
+                <div class="bg-white border border-gray-200 rounded-2xl p-6">
+                    <div class="space-y-4">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Year</span>
+                            <span class="font-medium">{{ car.year }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Make</span>
+                            <span class="font-medium">{{ car.make }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Model</span>
+                            <span class="font-medium">{{ car.model }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Mileage</span>
+                            <span class="font-medium">{{ car.mileage|intcomma }} miles</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Fuel Type</span>
+                            <span class="font-medium">{{ car.get_fuel_type_display }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Transmission</span>
+                            <span class="font-medium">{{ car.get_transmission_display }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Body Type</span>
+                            <span class="font-medium">{{ car.get_body_type_display }}</span>
+                        </div>
+                        {% if car.engine_size %}
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Engine Size</span>
+                                <span class="font-medium">{{ car.engine_size }}L</span>
+                            </div>
+                        {% endif %}
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Doors</span>
+                            <span class="font-medium">{{ car.doors }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Seats</span>
+                            <span class="font-medium">{{ car.seats }}</span>
+                        </div>
+                        {% if car.color %}
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Color</span>
+                                <span class="font-medium">{{ car.color }}</span>
+                            </div>
+                        {% endif %}
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Condition</span>
+                            <span class="font-medium">{{ car.condition }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Related Cars -->
+        {% if related_cars %}
+            <div class="mt-16">
+                <h2 class="text-2xl font-bold text-gray-900 mb-8">Similar {{ car.make }} Vehicles</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {% for related_car in related_cars %}
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                            <div class="relative">
+                                {% if related_car.primary_image %}
+                                    <img src="{{ related_car.primary_image.image.url }}" alt="{{ related_car }}" class="w-full h-48 object-cover">
+                                {% else %}
+                                    <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                                        <i class="fas fa-car text-gray-400 text-3xl"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="p-4">
+                                <h3 class="font-bold text-gray-900 mb-2">{{ related_car.year }} {{ related_car.make }} {{ related_car.model }}</h3>
+                                <div class="text-lg font-bold text-blue-600 mb-2">{{ related_car.formatted_price }}</div>
+                                <div class="text-sm text-gray-600 mb-3">{{ related_car.mileage|intcomma }} miles</div>
+                                
+                                <a href="{{ related_car.get_absolute_url }}" class="block w-full bg-blue-600 text-white text-center py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function changeMainImage(src, thumbnail) {
+        document.getElementById('main-image').src = src;
+        
+        // Update thumbnail borders
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.classList.remove('border-blue-500');
+            thumb.classList.add('border-transparent');
+        });
+        thumbnail.classList.remove('border-transparent');
+        thumbnail.classList.add('border-blue-500');
+    }
+</script>
+{% endblock %}
