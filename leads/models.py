@@ -53,11 +53,12 @@ class Lead(models.Model):
         """
         
         try:
+            notify = getattr(settings, 'NOTIFY_EMAIL', settings.DEFAULT_FROM_EMAIL)
             send_mail(
                 subject,
                 message,
                 settings.DEFAULT_FROM_EMAIL,
-                [settings.DEFAULT_FROM_EMAIL],  # Send to dealership email
+                [notify],  # Send to dealership notification email
                 fail_silently=False,
             )
         except Exception as e:
@@ -125,11 +126,11 @@ class TestDriveBooking(models.Model):
             
             try:
                 send_mail(
-                    subject,
-                    message,
-                    settings.DEFAULT_FROM_EMAIL,
-                    [self.customer_email],
-                    fail_silently=False,
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [self.customer_email],
+                fail_silently=False,
                 )
             except Exception as e:
                 print(f"Failed to send confirmation email: {e}")
@@ -154,11 +155,12 @@ class TestDriveBooking(models.Model):
         """
         
         try:
+            notify = getattr(settings, 'NOTIFY_EMAIL', settings.DEFAULT_FROM_EMAIL)
             send_mail(
                 subject,
                 message,
                 settings.DEFAULT_FROM_EMAIL,
-                [settings.DEFAULT_FROM_EMAIL],
+                [notify],
                 fail_silently=False,
             )
         except Exception as e:

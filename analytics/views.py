@@ -1,19 +1,20 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Count, Q
 from django.utils import timezone
 from datetime import datetime, timedelta
 from .models import CarView, DashboardStats, PopularCar
 from cars.models import Car
 from leads.models import Lead, TestDriveBooking
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from .forms import CarForm
 
 
-@staff_member_required
 def dashboard(request):
-    """Analytics dashboard view"""
-    # Get today's stats
-    today_stats = DashboardStats.get_or_calculate_today()
+    """Analytics dashboard view with live-calculated stats"""
+    # Always calculate live stats to avoid stale counts
+    today_stats = DashboardStats._calculate_stats_for_date(timezone.now().date())
     
     # Get most popular cars
     popular_cars = PopularCar.objects.select_related('car').order_by('-engagement_score')[:10]
@@ -23,49 +24,58 @@ def dashboard(request):
     recent_bookings = TestDriveBooking.objects.select_related('car').order_by('-created_at')[:5]
     recent_views = CarView.objects.select_related('car').order_by('-viewed_at')[:10]
     
-    # Weekly view trends (last 7 days)
-    week_ago = timezone.now() - timedelta(days=7)
-    daily_views = []
-    for i in range(7):
-        date = (timezone.now() - timedelta(days=i)).date()
-        views_count = CarView.objects.filter(viewed_at__date=date).count()
-        daily_views.append({
-            'date': date.strftime('%m/%d'),
-            'views': views_count
-        })
-    daily_views.reverse()  # Show oldest first
-    
     context = {
         'stats': today_stats,
         'popular_cars': popular_cars,
         'recent_leads': recent_leads,
         'recent_bookings': recent_bookings,
         'recent_views': recent_views,
-        'daily_views': daily_views,
     }
     
     return render(request, 'analytics/dashboard.html', context)
 
 
-@staff_member_required
+def live_stats_api(request):
+    """API endpoint that returns live stats for real-time dashboard updates"""
+    data = DashboardStats._calculate_stats_for_date(timezone.now().date())
+    return JsonResponse({'data': data})
+
+
 def chart_data_api(request):
     """API endpoint for chart data"""
     chart_type = request.GET.get('type', 'daily_views')
-    
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+
+    # Parse dates if provided
+    if start_date:
+        try:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+        except ValueError:
+            start_date = None
+    if end_date:
+        try:
+            end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+        except ValueError:
+            end_date = None
+
     if chart_type == 'daily_views':
-        # Last 30 days view data
-        thirty_days_ago = timezone.now() - timedelta(days=30)
+        # Default to last 30 days if no dates provided
+        if not start_date:
+            start_date = (timezone.now() - timedelta(days=30)).date()
+        if not end_date:
+            end_date = timezone.now().date()
+
         data = []
-        
-        for i in range(30):
-            date = (timezone.now() - timedelta(days=i)).date()
-            views_count = CarView.objects.filter(viewed_at__date=date).count()
+        current_date = start_date
+        while current_date <= end_date:
+            views_count = CarView.objects.filter(viewed_at__date=current_date).count()
             data.append({
-                'date': date.isoformat(),
+                'date': current_date.isoformat(),
                 'views': views_count
             })
-        
-        data.reverse()  # Show oldest first
+            current_date += timedelta(days=1)
+
         return JsonResponse({'data': data})
     
     elif chart_type == 'popular_cars':
@@ -129,3 +139,25 @@ def chart_data_api(request):
         return JsonResponse({'data': data})
     
     return JsonResponse({'error': 'Invalid chart type'})
+
+class CarListView(ListView):
+    model = Car
+    template_name = 'analytics/car_list.html'
+    context_object_name = 'cars'
+
+class CarCreateView(CreateView):
+    model = Car
+    form_class = CarForm
+    template_name = 'analytics/car_form.html'
+    success_url = reverse_lazy('analytics:car_list')
+
+class CarUpdateView(UpdateView):
+    model = Car
+    form_class = CarForm
+    template_name = 'analytics/car_form.html'
+    success_url = reverse_lazy('analytics:car_list')
+
+class CarDeleteView(DeleteView):
+    model = Car
+    template_name = 'analytics/car_confirm_delete.html'
+    success_url = reverse_lazy('analytics:car_list')

@@ -21,10 +21,10 @@ class CarImageInline(admin.TabularInline):
 
 @admin.register(Car)
 class CarAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'year', 'fuel_type', 'transmission', 'formatted_price', 'is_available', 'is_featured', 'created_at')
-    list_filter = ('make', 'fuel_type', 'transmission', 'body_type', 'is_available', 'is_featured', 'year')
+    list_display = ('__str__', 'year', 'fuel_type', 'transmission', 'formatted_price', 'status', 'is_featured', 'created_at')
+    list_filter = ('make', 'fuel_type', 'transmission', 'body_type', 'status', 'is_featured', 'year')
     search_fields = ('make', 'model', 'year', 'description')
-    list_editable = ('is_available', 'is_featured')
+    list_editable = ('status', 'is_featured')
     readonly_fields = ('created_at', 'updated_at', 'primary_image_preview')
     inlines = [CarImageInline]
 
@@ -39,7 +39,7 @@ class CarAdmin(admin.ModelAdmin):
             'fields': ('description', 'features')
         }),
         ('Status', {
-            'fields': ('is_available', 'is_featured', 'is_sold')
+            'fields': ('status', 'is_featured')
         }),
         ('Timestamps', {
             'fields': ('created_at', 'updated_at'),

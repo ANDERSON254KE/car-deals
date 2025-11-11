@@ -148,3 +148,10 @@ def post_to_twitter(post):
     # post.attempts += 1
     # post.save()
     pass
+
+
+def post_to_linkedin(post):
+    """
+    Real implementation would use LinkedIn API
+    """
+    pass

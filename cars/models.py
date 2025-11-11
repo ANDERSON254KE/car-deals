@@ -1,5 +1,4 @@
 from django.db import models
-from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 import uuid
 import os
@@ -60,10 +59,15 @@ class Car(models.Model):
     condition = models.CharField(max_length=50, default='Used')
     color = models.CharField(max_length=50, blank=True)
     
+    STATUS_CHOICES = [
+        ('available', 'Available'),
+        ('sold', 'Sold'),
+        ('maintenance', 'Maintenance'),
+    ]
+
     # Status
-    is_available = models.BooleanField(default=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='available')
     is_featured = models.BooleanField(default=False)
-    is_sold = models.BooleanField(default=False)
     
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
@@ -78,6 +82,7 @@ class Car(models.Model):
         return f"{self.year} {self.make} {self.model}"
     
     def get_absolute_url(self):
+        from django.urls import reverse
         return reverse('cars:detail', kwargs={'pk': self.pk})
     
     @property
@@ -87,8 +92,8 @@ class Car(models.Model):
     
     @property
     def formatted_price(self):
-        """Return formatted price"""
-        return f"${self.price:,.0f}"
+        """Return formatted price in Kenyan Shillings"""
+        return f"KSh {self.price:,.0f}"
     
     @property
     def features_list(self):

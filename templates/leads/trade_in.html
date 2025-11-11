@@ -1,0 +1,126 @@
+{# This is a comment to force a reload #}
+{% extends 'base.html' %}
+{% block title %}Trade-in Your Car{% endblock %}
+{% block content %}
+<section class="py-12">
+  <div class="container mx-auto px-6 max-w-3xl">
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">Trade-in Your Car</h1>
+    <p class="text-gray-600 mb-8">Get a competitive offer for your current vehicle. Fill out the form below, and our team will get back to you with a valuation. The more details you provide, the more accurate your estimate will be.</p>
+    
+    <!-- How It Works Section -->
+    <div class="bg-gray-100 rounded-2xl p-8 mb-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">How It Works</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span class="text-2xl font-bold">1</span>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900">Submit Your Vehicle</h3>
+                <p class="text-gray-600 text-sm">Fill out the form with your car's details and upload clear photos.</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span class="text-2xl font-bold">2</span>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900">Get a Valuation</h3>
+                <p class="text-gray-600 text-sm">Our experts will review your submission and provide a fair market valuation.</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span class="text-2xl font-bold">3</span>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900">Finalize the Trade-in</h3>
+                <p class="text-gray-600 text-sm">Bring your car for a final inspection and complete the trade-in process.</p>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="bg-white p-6 rounded-xl shadow-md space-y-4">
+      {% csrf_token %}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Full Name</label>
+          {{ form.name }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Email</label>
+          {{ form.email }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Phone</label>
+          {{ form.phone }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Make</label>
+          {{ form.make }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Model</label>
+          {{ form.model }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Year</label>
+          {{ form.year }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Mileage</label>
+          {{ form.mileage }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Condition</label>
+          {{ form.condition }}
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700">VIN (optional)</label>
+          {{ form.vin }}
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700">Notes</label>
+          {{ form.notes }}
+        </div>
+         <div class="md:col-span-2">
+           <label class="block text-sm font-medium text-gray-700 mb-2">Upload Images <span class="text-red-500">*</span></label>
+           {{ form.images }}
+           <p class="text-xs text-gray-500 mt-1">Upload at least 10 clear photos of your vehicle (exterior, interior, engine, any damage, etc.)</p>
+           <div id="file-count" class="text-xs text-blue-600 mt-1 hidden">Selected: <span id="selected-count">0</span> files</div>
+           {% if form.errors.images %}
+             <p class="text-sm text-red-600 mt-2">{{ form.errors.images.0 }}</p>
+           {% endif %}
+         </div>
+      </div>
+      <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">Submit Trade-in</button>
+     </form>
+   </div>
+ </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const imagesInput = document.getElementById('images-input');
+    const fileCountDiv = document.getElementById('file-count');
+    const selectedCountSpan = document.getElementById('selected-count');
+
+    if (imagesInput) {
+        imagesInput.addEventListener('change', function(e) {
+            const files = e.target.files;
+            const count = files.length;
+
+            if (count > 0) {
+                selectedCountSpan.textContent = count;
+                fileCountDiv.classList.remove('hidden');
+
+                // Add visual feedback
+                if (count >= 10) {
+                    fileCountDiv.className = 'text-xs text-green-600 mt-1';
+                } else {
+                    fileCountDiv.className = 'text-xs text-orange-600 mt-1';
+                }
+            } else {
+                fileCountDiv.classList.add('hidden');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

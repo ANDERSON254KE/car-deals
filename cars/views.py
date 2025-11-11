@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.db.models import Q
+from django.http import JsonResponse
 from .models import Car
 
 
@@ -11,7 +12,7 @@ class CarListView(ListView):
     paginate_by = 12
     
     def get_queryset(self):
-        queryset = Car.objects.filter(is_available=True).select_related().prefetch_related('images')
+        queryset = Car.objects.filter(status='available').select_related().prefetch_related('images')
         
         # Filter by make
         make = self.request.GET.get('make')
@@ -72,7 +73,7 @@ class CarDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['related_cars'] = Car.objects.filter(
             make=self.object.make,
-            is_available=True
+            status='available'
         ).exclude(id=self.object.id)[:4]
         return context
 
@@ -91,7 +92,7 @@ class CarSearchView(ListView):
                 Q(model__icontains=query) |
                 Q(description__icontains=query) |
                 Q(features__icontains=query),
-                is_available=True
+                status='available'
             ).select_related().prefetch_related('images')
         return Car.objects.none()
     
@@ -99,3 +100,24 @@ class CarSearchView(ListView):
         context = super().get_context_data(**kwargs)
         context['query'] = self.request.GET.get('q', '')
         return context
+
+
+from django.views.decorators.cache import cache_page
+
+
+@cache_page(60 * 15)
+def car_api(request):
+    cars = Car.objects.filter(status='available').select_related().prefetch_related('images')
+    data = []
+    for car in cars:
+        data.append({
+            'id': car.id,
+            'make': car.make,
+            'model': car.model,
+            'year': car.year,
+            'price': car.price,
+            'mileage': car.mileage,
+            'image': car.primary_image.image.url if car.primary_image else f'https://picsum.photos/400/300?random={car.id}&car',
+            'features': car.features_list,
+        })
+    return JsonResponse(data, safe=False)

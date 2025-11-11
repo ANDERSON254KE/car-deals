@@ -10,7 +10,7 @@ services:
       - media_volume:/app/media
       - static_volume:/app/staticfiles
     environment:
-      - DEBUG=True
+      - DEBUG=False
       - DATABASE_URL=postgres://postgres:postgres@db:5432/cardealerdb
     depends_on:
       - db
@@ -27,7 +27,7 @@ services:
       - POSTGRES_PASSWORD=postgres
 
   redis:
-    image: redis:7-alpine
+    image: redis:8-alpine
     ports:
       - "6379:6379"
 

@@ -88,8 +88,8 @@ class DashboardStats(models.Model):
         # Car stats
         car_stats = {
             'total_cars': Car.objects.count(),
-            'available_cars': Car.objects.filter(is_available=True).count(),
-            'sold_cars': Car.objects.filter(is_sold=True).count(),
+            'available_cars': Car.objects.filter(status='available').count(),
+            'sold_cars': Car.objects.filter(status='sold').count(),
             'featured_cars': Car.objects.filter(is_featured=True).count(),
         }
         

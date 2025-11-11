@@ -1,74 +1,64 @@
-// Sample car data
-const cars = [
-    {
-        id: 1,
-        make: "BMW",
-        model: "X5",
-        year: 2023,
-        price: 65000,
-        mileage: 12000,
-        image: "https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?auto=compress&cs=tinysrgb&w=500",
-        features: ["Leather Seats", "Navigation", "Sunroof", "AWD"]
-    },
-    {
-        id: 2,
-        make: "Mercedes",
-        model: "C-Class",
-        year: 2022,
-        price: 45000,
-        mileage: 18000,
-        image: "https://images.pexels.com/photos/1719648/pexels-photo-1719648.jpeg?auto=compress&cs=tinysrgb&w=500",
-        features: ["Premium Sound", "Heated Seats", "Bluetooth", "Backup Camera"]
-    },
-    {
-        id: 3,
-        make: "Audi",
-        model: "A4",
-        year: 2023,
-        price: 52000,
-        mileage: 8000,
-        image: "https://images.pexels.com/photos/1007410/pexels-photo-1007410.jpeg?auto=compress&cs=tinysrgb&w=500",
-        features: ["Quattro AWD", "Virtual Cockpit", "LED Headlights", "Sport Package"]
-    },
-    {
-        id: 4,
-        make: "Toyota",
-        model: "Camry",
-        year: 2023,
-        price: 28000,
-        mileage: 15000,
-        image: "https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=500",
-        features: ["Hybrid Engine", "Safety Sense", "Apple CarPlay", "Wireless Charging"]
-    },
-    {
-        id: 5,
-        make: "Honda",
-        model: "Accord",
-        year: 2022,
-        price: 32000,
-        mileage: 22000,
-        image: "https://images.pexels.com/photos/1545743/pexels-photo-1545743.jpeg?auto=compress&cs=tinysrgb&w=500",
-        features: ["Turbo Engine", "Honda Sensing", "Leather Interior", "Moonroof"]
-    },
-    {
-        id: 6,
-        make: "Tesla",
-        model: "Model 3",
-        year: 2023,
-        price: 48000,
-        mileage: 5000,
-        image: "https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=500",
-        features: ["Autopilot", "Supercharging", "Premium Interior", "Over-the-Air Updates"]
-    }
-];
+// Load cars from API
+let cars = [];
 
-// Load cars into the grid
-function loadCars() {
+// Load cars from API
+async function loadCars() {
+    try {
+        const response = await fetch('/cars/api/');
+        cars = await response.json();
+        displayCars(cars);
+    } catch (error) {
+        console.error('Error loading cars:', error);
+        // Fallback to sample data if API fails
+        cars = [
+            {
+                id: 1,
+                make: "BMW",
+                model: "X5",
+                year: 2023,
+                price: 6500000,
+                mileage: 12000,
+                image: "https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?auto=compress&cs=tinysrgb&w=500",
+                features: ["Leather Seats", "Navigation", "Sunroof", "AWD"]
+            },
+            {
+                id: 2,
+                make: "Mercedes",
+                model: "C-Class",
+                year: 2022,
+                price: 4500000,
+                mileage: 18000,
+                image: "https://images.pexels.com/photos/1719648/pexels-photo-1719648.jpeg?auto=compress&cs=tinysrgb&w=500",
+                features: ["Premium Sound", "Heated Seats", "Bluetooth", "Backup Camera"]
+            }
+        ];
+        displayCars(cars);
+    }
+}
+
+function displayCars(cars) {
     const carGrid = document.getElementById('car-grid');
-    
+    carGrid.innerHTML = ''; // Clear existing content
+
+    if (cars.length === 0) {
+        carGrid.innerHTML = '<p class="col-span-full text-center text-gray-600">No cars found matching your criteria.</p>';
+        return;
+    }
+
     cars.forEach(car => {
         const carCard = document.createElement('div');
         carCard.className = 'bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300';
+        
+        // Format price in KSh
+        const formattedPrice = new Intl.NumberFormat('en-KE', {
+            style: 'currency',
+            currency: 'KES',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(car.price);
+
+        // Format mileage
+        const formattedMileage = car.mileage.toLocaleString();
         
         carCard.innerHTML = `
             <div class="relative">
@@ -80,8 +70,8 @@ function loadCars() {
             <div class="p-6">
                 <h3 class="text-xl font-bold mb-2">${car.make} ${car.model}</h3>
                 <div class="flex justify-between items-center mb-4">
-                    <span class="text-2xl font-bold text-blue-600">$${car.price.toLocaleString()}</span>
-                    <span class="text-gray-600">${car.mileage.toLocaleString()} miles</span>
+                    <span class="text-2xl font-bold text-blue-600">${formattedPrice}</span>
+                    <span class="text-gray-600">${formattedMileage} km</span>
                 </div>
                 <div class="mb-4">
                     <div class="flex flex-wrap gap-2">
@@ -108,18 +98,15 @@ function loadCars() {
 
 // View car details
 function viewDetails(carId) {
-    const car = cars.find(c => c.id === carId);
-    if (car) {
-        alert(`${car.make} ${car.model} ${car.year}\n\nPrice: $${car.price.toLocaleString()}\nMileage: ${car.mileage.toLocaleString()} miles\n\nFeatures:\n${car.features.join('\n')}\n\nContact us for more details!`);
-    }
+    window.location.href = `/cars/${carId}/`;
 }
 
 // Contact dealer via WhatsApp
 function contactDealer(carId) {
     const car = cars.find(c => c.id === carId);
     if (car) {
-        const message = `Hi! I'm interested in the ${car.make} ${car.model} ${car.year} listed for $${car.price.toLocaleString()}. Can you provide more information?`;
-        const whatsappUrl = `https://wa.me/15551234567?text=${encodeURIComponent(message)}`;
+        const message = `Hi! I'm interested in the ${car.year} ${car.make} ${car.model}. Can you provide more information?`;
+        const whatsappUrl = `https://wa.me/254123456789?text=${encodeURIComponent(message)}`;
         window.open(whatsappUrl, '_blank');
     }
 }

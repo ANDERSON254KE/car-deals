@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Dealer Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script type="module" crossorigin src="/assets/main-Bk-qDviQ.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/main-CmBZWVR6.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <i class="fas fa-car text-blue-600 text-2xl mr-2"></i>
+                    <span class="text-xl font-bold text-gray-800">AutoDealer Pro</span>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#home" class="text-gray-700 hover:text-blue-600 transition">Home</a>
+                    <a href="#inventory" class="text-gray-700 hover:text-blue-600 transition">Inventory</a>
+                    <a href="#about" class="text-gray-700 hover:text-blue-600 transition">About</a>
+                    <a href="#contact" class="text-gray-700 hover:text-blue-600 transition">Contact</a>
+                    <a href="http://localhost:8000/dashboard/" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition">Staff Dashboard</a>
+                </div>
+                <button class="md:hidden">
+                    <i class="fas fa-bars text-gray-700"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="bg-gradient-to-r from-blue-600 to-purple-700 text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h1 class="text-5xl font-bold mb-6">Find Your Perfect Car</h1>
+            <p class="text-xl mb-8">Premium vehicles, exceptional service, unbeatable prices</p>
+            <div class="bg-white rounded-lg p-6 max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <select class="p-3 border rounded-lg text-gray-700">
+                        <option>Any Make</option>
+                        <option>BMW</option>
+                        <option>Mercedes</option>
+                        <option>Audi</option>
+                        <option>Toyota</option>
+                    </select>
+                    <select class="p-3 border rounded-lg text-gray-700">
+                        <option>Any Model</option>
+                        <option>Sedan</option>
+                        <option>SUV</option>
+                        <option>Hatchback</option>
+                        <option>Coupe</option>
+                    </select>
+                    <select class="p-3 border rounded-lg text-gray-700">
+                        <option>Max Price</option>
+                        <option>$20,000</option>
+                        <option>$40,000</option>
+                        <option>$60,000</option>
+                        <option>$80,000+</option>
+                    </select>
+                    <button class="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Cars -->
+    <section id="inventory" class="py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Featured Vehicles</h2>
+            <div id="car-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Cars will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="bg-gray-100 py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold mb-6">Why Choose AutoDealer Pro?</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 text-xl mr-4 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold mb-2">Quality Guaranteed</h3>
+                                <p class="text-gray-600">Every vehicle undergoes thorough inspection</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-dollar-sign text-green-500 text-xl mr-4 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold mb-2">Best Prices</h3>
+                                <p class="text-gray-600">Competitive pricing with financing options</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-headset text-green-500 text-xl mr-4 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold mb-2">Expert Support</h3>
+                                <p class="text-gray-600">Professional team to guide your purchase</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-6">Book a Test Drive</h3>
+                    <form id="test-drive-form" class="space-y-4">
+                        <input type="text" placeholder="Full Name" class="w-full p-3 border rounded-lg" required>
+                        <input type="email" placeholder="Email" class="w-full p-3 border rounded-lg" required>
+                        <input type="tel" placeholder="Phone Number" class="w-full p-3 border rounded-lg" required>
+                        <select class="w-full p-3 border rounded-lg" required>
+                            <option value="">Select Vehicle</option>
+                            <option>BMW X5 2023</option>
+                            <option>Mercedes C-Class 2022</option>
+                            <option>Audi A4 2023</option>
+                        </select>
+                        <input type="date" class="w-full p-3 border rounded-lg" required>
+                        <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition">
+                            Book Test Drive
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Contact Us</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-xl font-semibold mb-6">Get in Touch</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-map-marker-alt text-blue-600 text-xl mr-4"></i>
+                            <span>123 Auto Street, Car City, CC 12345</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-phone text-blue-600 text-xl mr-4"></i>
+                            <span>(555) 123-4567</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope text-blue-600 text-xl mr-4"></i>
+                            <span>info@autodealerpro.com</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-clock text-blue-600 text-xl mr-4"></i>
+                            <span>Mon-Sat: 9AM-7PM, Sun: 11AM-5PM</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <form id="contact-form" class="space-y-4">
+                        <input type="text" placeholder="Your Name" class="w-full p-3 border rounded-lg" required>
+                        <input type="email" placeholder="Your Email" class="w-full p-3 border rounded-lg" required>
+                        <input type="text" placeholder="Subject" class="w-full p-3 border rounded-lg" required>
+                        <textarea placeholder="Your Message" rows="4" class="w-full p-3 border rounded-lg" required></textarea>
+                        <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-car text-blue-400 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">AutoDealer Pro</span>
+                    </div>
+                    <p class="text-gray-400">Your trusted partner in finding the perfect vehicle.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#home" class="hover:text-white transition">Home</a></li>
+                        <li><a href="#inventory" class="hover:text-white transition">Inventory</a></li>
+                        <li><a href="#about" class="hover:text-white transition">About</a></li>
+                        <li><a href="#contact" class="hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Services</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>Car Sales</li>
+                        <li>Financing</li>
+                        <li>Trade-ins</li>
+                        <li>Service & Maintenance</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 AutoDealer Pro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

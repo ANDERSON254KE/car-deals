@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% extends 'base.html' %}
 {% load humanize %}
 
 {% block title %}{{ car.year }} {{ car.make }} {{ car.model }} - Car Dealership{% endblock %}
@@ -23,20 +24,14 @@
             <div>
                 <!-- Main Image -->
                 <div class="mb-4">
-                    {% if car.images.exists %}
-                        <img id="main-image" src="{{ car.images.first.image.url }}" alt="{{ car }}" class="w-full h-96 object-cover rounded-2xl shadow-lg">
-                    {% else %}
-                        <div class="w-full h-96 bg-gray-200 flex items-center justify-center rounded-2xl shadow-lg">
-                            <i class="fas fa-car text-gray-400 text-6xl"></i>
-                        </div>
-                    {% endif %}
+                    <img id="main-image" src="https://picsum.photos/800/600?random={{ car.id }}&car" alt="{{ car }}" class="w-full h-96 object-cover rounded-2xl shadow-lg">
                 </div>
                 
                 <!-- Thumbnail Images -->
                 {% if car.images.count > 1 %}
-                    <div class="grid grid-cols-4 gap-2">
+                    <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2">
                         {% for image in car.images.all %}
-                            <img src="{{ image.image.url }}" alt="{{ car }}" class="thumbnail w-full h-20 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-500 transition-colors {% if forloop.first %}border-blue-500{% endif %}" onclick="changeMainImage('{{ image.image.url }}', this)">
+                            <img src="{{ image.image.url }}" alt="{{ car }}" class="thumbnail w-full h-16 sm:h-20 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-500 transition-colors {% if forloop.first %}border-blue-500{% endif %}" onclick="changeMainImage('{{ image.image.url }}', this)">
                         {% endfor %}
                     </div>
                 {% endif %}
@@ -199,13 +194,7 @@
                     {% for related_car in related_cars %}
                         <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
                             <div class="relative">
-                                {% if related_car.primary_image %}
-                                    <img src="{{ related_car.primary_image.image.url }}" alt="{{ related_car }}" class="w-full h-48 object-cover">
-                                {% else %}
-                                    <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
-                                        <i class="fas fa-car text-gray-400 text-3xl"></i>
-                                    </div>
-                                {% endif %}
+                            <img src="https://picsum.photos/400/300?random={{ related_car.id }}&car" alt="{{ related_car }}" class="w-full h-48 object-cover">
                             </div>
                             
                             <div class="p-4">

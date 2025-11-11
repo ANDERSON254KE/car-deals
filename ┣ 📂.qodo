@@ -1,0 +1,129 @@
+┣ 📂.qodo
+┗ 📂project
+  ┣ 📂analytics
+  ┃ ┣ 📂__pycache__
+  ┃ ┃ ┣ 📜__init__.cpython-39.pyc
+  ┃ ┃ ┣ 📜admin.cpython-39.pyc
+  ┃ ┃ ┣ 📜apps.cpython-39.pyc
+  ┃ ┃ ┣ 📜models.cpython-39.pyc
+  ┃ ┃ ┣ 📜urls.cpython-39.pyc
+  ┃ ┃ ┗ 📜views.cpython-39.pyc
+  ┃ ┣ 📜__init__.py
+  ┃ ┣ 📜admin.py
+  ┃ ┣ 📜apps.py
+  ┃ ┣ 📜middleware.py
+  ┃ ┣ 📜models.py
+  ┃ ┣ 📜urls.py
+  ┃ ┗ 📜views.py
+  ┣ 📂CarDealerPlatform
+  ┃ ┣ 📂__pycache__
+  ┃ ┃ ┣ 📜__init__.cpython-39.pyc
+  ┃ ┃ ┣ 📜settings.cpython-39.pyc
+  ┃ ┃ ┗ 📜urls.cpython-39.pyc
+  ┃ ┣ 📜__init__.py
+  ┃ ┣ 📜asgi.py
+  ┃ ┣ 📜settings.py
+  ┃ ┣ 📜urls.py
+  ┃ ┗ 📜wsgi.py
+  ┣ 📂cars
+  ┃ ┣ 📂__pycache__
+  ┃ ┃ ┣ 📜__init__.cpython-39.pyc
+  ┃ ┃ ┣ 📜admin.cpython-39.pyc
+  ┃ ┃ ┣ 📜apps.cpython-39.pyc
+  ┃ ┃ ┣ 📜models.cpython-39.pyc
+  ┃ ┃ ┣ 📜urls.cpython-39.pyc
+  ┃ ┃ ┗ 📜views.cpython-39.pyc
+  ┃ ┣ 📜__init__.py
+  ┃ ┣ 📜admin.py
+  ┃ ┣ 📜apps.py
+  ┃ ┣ 📜models.py
+  ┃ ┣ 📜urls.py
+  ┃ ┗ 📜views.py
+  ┣ 📂core
+  ┃ ┣ 📂__pycache__
+  ┃ ┃ ┣ 📜__init__.cpython-39.pyc
+  ┃ ┃ ┣ 📜apps.cpython-39.pyc
+  ┃ ┃ ┗ 📜views.cpython-39.pyc
+  ┃ ┣ 📜__init__.py
+  ┃ ┣ 📜apps.py
+  ┃ ┗ 📜views.py
+  ┣ 📂dashboard
+  ┃ ┣ 📂__pycache__
+  ┃ ┃ ┣ 📜__init__.cpython-39.pyc
+  ┃ ┃ ┣ 📜admin.cpython-39.pyc
+  ┃ ┃ ┣ 📜apps.cpython-39.pyc
+  ┃ ┃ ┣ 📜forms.cpython-39.pyc
+  ┃ ┃ ┣ 📜models.cpython-39.pyc
+  ┃ ┃ ┣ 📜urls.cpython-39.pyc
+  ┃ ┃ ┗ 📜views.cpython-39.pyc
+  ┃ ┣ 📂migrations
+  ┃ ┃ ┣ 📂__pycache__
+  ┃ ┃ ┃ ┗ 📜__init__.cpython-39.pyc
+  ┃ ┃ ┗ 📜__init__.py
+  ┃ ┣ 📜__init__.py
+  ┃ ┣ 📜admin.py
+  ┃ ┣ 📜apps.py
+  ┃ ┣ 📜forms.py
+  ┃ ┣ 📜models.py
+  ┃ ┣ 📜tests.py
+  ┃ ┣ 📜urls.py
+  ┃ ┗ 📜views.py
+  ┣ 📂leads
+  ┃ ┣ 📂__pycache__
+  ┃ ┃ ┣ 📜__init__.cpython-39.pyc
+  ┃ ┃ ┣ 📜admin.cpython-39.pyc
+  ┃ ┃ ┣ 📜apps.cpython-39.pyc
+  ┃ ┃ ┣ 📜forms.cpython-39.pyc
+  ┃ ┃ ┣ 📜models.cpython-39.pyc
+  ┃ ┃ ┣ 📜urls.cpython-39.pyc
+  ┃ ┃ ┗ 📜views.cpython-39.pyc
+  ┃ ┣ 📜__init__.py
+  ┃ ┣ 📜admin.py
+  ┃ ┣ 📜apps.py
+  ┃ ┣ 📜forms.py
+  ┃ ┣ 📜models.py
+  ┃ ┣ 📜urls.py
+  ┃ ┗ 📜views.py
+  ┣ 📂social
+  ┃ ┣ 📂__pycache__
+  ┃ ┃ ┣ 📜__init__.cpython-39.pyc
+  ┃ ┃ ┣ 📜admin.cpython-39.pyc
+  ┃ ┃ ┣ 📜apps.cpython-39.pyc
+  ┃ ┃ ┗ 📜models.cpython-39.pyc
+  ┃ ┣ 📜__init__.py
+  ┃ ┣ 📜admin.py
+  ┃ ┣ 📜apps.py
+  ┃ ┣ 📜models.py
+  ┃ ┗ 📜tasks.py
+  ┣ 📂static
+  ┣ 📂templates
+  ┃ ┣ 📂analytics
+  ┃ ┃ ┗ 📜dashboard.html
+  ┃ ┣ 📂cars
+  ┃ ┃ ┣ 📜detail.html
+  ┃ ┃ ┗ 📜list.html
+  ┃ ┣ 📂core
+  ┃ ┃ ┗ 📜home.html
+  ┃ ┣ 📂dashboard
+  ┃ ┃ ┣ 📜car_confirm_delete.html
+  ┃ ┃ ┣ 📜car_form.html
+  ┃ ┃ ┣ 📜car_list.html
+  ┃ ┃ ┗ 📜dashboard.html
+  ┃ ┣ 📂leads
+  ┃ ┃ ┣ 📜book_test_drive.html
+  ┃ ┃ ┣ 📜contact.html
+  ┃ ┃ ┣ 📜create_lead.html
+  ┃ ┃ ┗ 📜thank_you.html
+  ┃ ┗ 📜base.html
+  ┣ 📜.env
+  ┣ 📜.gitignore
+  ┣ 📜db.sqlite3
+  ┣ 📜docker-compose.yml
+  ┣ 📜Dockerfile
+  ┣ 📜index.html
+  ┣ 📜main.js
+  ┣ 📜manage.py
+  ┣ 📜nginx.conf
+  ┣ 📜package.json
+  ┣ 📜README.md
+  ┗ 📜requirements.txt

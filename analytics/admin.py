@@ -73,7 +73,7 @@ class DashboardStatsAdmin(admin.ModelAdmin):
 @admin.register(PopularCar)
 class PopularCarAdmin(admin.ModelAdmin):
     list_display = ('car_link', 'total_views', 'unique_views', 'total_inquiries', 'total_bookings', 'engagement_score', 'last_updated')
-    list_filter = ('last_updated', 'car__make', 'car__is_available')
+    list_filter = ('last_updated', 'car__make', 'car__status')
     search_fields = ('car__make', 'car__model')
     readonly_fields = ('last_updated', 'engagement_score')
     ordering = ['-engagement_score', '-total_views']

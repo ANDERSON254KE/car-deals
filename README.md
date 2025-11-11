@@ -9,5 +9,5 @@ A full-stack car dealership platform built with:
 ## 🛠️ Setup
 
 ```bash
-docker-compose up --build
+docker-compose up --build  
 # car-deals
